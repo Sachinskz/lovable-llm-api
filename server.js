@@ -3,6 +3,20 @@ import express from "express";
 import cors from "cors";
 import bodyParser from "body-parser";
 import fetch from "node-fetch";
+const express = require("express");
+const cors = require("cors");
+
+const app = express();
+app.use(cors());
+
+app.get("/", (req, res) => {
+  res.send("Server is live!");
+});
+
+const PORT = process.env.PORT || 8080;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
 
 const app = express();
 app.use(cors());
@@ -62,5 +76,6 @@ app.post("/run_sql", async (req, res) => {
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+
 
 
