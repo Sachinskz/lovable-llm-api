@@ -1,26 +1,30 @@
-// server.js
-import express from 'express';
-import cors from 'cors';
+import express from "express";
+import bodyParser from "body-parser";
 
 const app = express();
-const PORT = process.env.PORT || 8080;
+app.use(bodyParser.json());
 
-app.use(cors());
-app.use(express.json());
-
-// Example route
-app.get('/', (req, res) => {
-  res.send('Server is running 🚀');
+// POST /generate
+app.post("/generate", (req, res) => {
+  const { prompt } = req.body;
+  // Your LLM call here
+  res.json({ result: `You sent: ${prompt}` });
 });
 
-// Only listen if this file is run directly (prevents double start)
-if (process.env.NODE_ENV !== 'test') {
-  app.listen(PORT, () => {
-    console.log(`✅ Server running on port ${PORT}`);
-  });
-}
+// POST /run_sql
+app.post("/run_sql", (req, res) => {
+  const { sql } = req.body;
+  // Your SQL execution logic here
+  res.json({ data: [{ message: `Ran SQL: ${sql}` }] });
+});
+
+const port = process.env.PORT || 3000;
+app.listen(port, () => {
+  console.log(`Server listening on port ${port}`);
+});
 
 export default app; // in case you import it elsewhere
+
 
 
 
