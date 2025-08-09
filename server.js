@@ -1,30 +1,28 @@
-// Import required modules
 import express from "express";
 import cors from "cors";
 
-// Create an Express app
 const app = express();
 
 // Middleware
-app.use(cors()); // Enable CORS for all routes
-app.use(express.json()); // Parse JSON request bodies
+app.use(cors());
+app.use(express.json());
 
-// Simple test route
+// Default route
 app.get("/", (req, res) => {
-  res.json({ message: "Server is running successfully!" });
+  res.json({ message: "Lovable LLM API is running 🚀" });
 });
 
-// Example API endpoint
-app.post("/api/data", (req, res) => {
-  const data = req.body;
-  res.json({ received: data, status: "success" });
+// Example POST route (for API calls)
+app.post("/api/query", (req, res) => {
+  const { prompt } = req.body;
+  // In future: integrate with your AI model here
+  res.json({ response: `You said: ${prompt}` });
 });
 
-// Use the port from environment variables or default to 8080
+// Port from Railway or default to 8080
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
   console.log(`✅ Server running on port ${PORT}`);
 });
-
 
 
