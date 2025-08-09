@@ -1,18 +1,21 @@
-// server.js
-const express = require('express');
-const fetch = require('node-fetch');
-const path = require('path');
+// server.js (ESM version)
+import express from 'express';
+import fetch from 'node-fetch';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8080;
 
-// Change this to your actual Lovable backend URL
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Change to your actual backend URL
 const LOVABLE_API_BASE = 'https://<your-backend-name>.up.railway.app';
 
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Proxy API requests
 app.post('/api/query', async (req, res) => {
   try {
     const response = await fetch(`${LOVABLE_API_BASE}/api/query`, {
@@ -33,5 +36,11 @@ app.post('/api/query', async (req, res) => {
 });
 
 app.listen(PORT, () => {
+  console.log(`✅ Server running on port ${PORT}`);
+});
+
+
+app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
 });
+
