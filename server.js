@@ -1,28 +1,37 @@
-import express from "express";
-import cors from "cors";
+// server.js
+const express = require('express');
+const fetch = require('node-fetch');
+const path = require('path');
 
 const app = express();
+const PORT = process.env.PORT || 3000;
 
-// Middleware
-app.use(cors());
+// Change this to your actual Lovable backend URL
+const LOVABLE_API_BASE = 'https://<your-backend-name>.up.railway.app';
+
 app.use(express.json());
+app.use(express.static(path.join(__dirname, 'public')));
 
-// Default route
-app.get("/", (req, res) => {
-  res.json({ message: "Lovable LLM API is running 🚀" });
+// Proxy API requests
+app.post('/api/query', async (req, res) => {
+  try {
+    const response = await fetch(`${LOVABLE_API_BASE}/api/query`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(req.body)
+    });
+
+    if (!response.ok) {
+      return res.status(response.status).json({ error: `Backend error: ${response.statusText}` });
+    }
+
+    const data = await response.json();
+    res.json(data);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
-// Example POST route (for API calls)
-app.post("/api/query", (req, res) => {
-  const { prompt } = req.body;
-  // In future: integrate with your AI model here
-  res.json({ response: `You said: ${prompt}` });
-});
-
-// Port from Railway or default to 8080
-const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
-  console.log(`✅ Server running on port ${PORT}`);
+  console.log(`Server running at http://localhost:${PORT}`);
 });
-
-
